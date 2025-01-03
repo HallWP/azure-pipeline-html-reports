@@ -13,7 +13,7 @@
   "version": {
     "Major": "1",
     "Minor": "2",
-    "Patch": "1"
+    "Patch": "3"
   },
   "minimumAgentVersion": "2.144.0",
   "instanceNameFormat": "Publish Html Report",
@@ -45,15 +45,15 @@
   ],
   "execution": {
     "Node10": {
-      "target": "index.ts",
+      "target": "index.js",
       "argumentFormat": ""
     },
     "Node16": {
-      "target": "index.ts",
+      "target": "index.js",
       "argumentFormat": ""
     },
     "Node20_1": {
-      "target": "index.ts",
+      "target": "index.js",
       "argumentFormat": ""
     }
   }

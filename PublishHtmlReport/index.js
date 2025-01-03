@@ -1,26 +1,20 @@
-import tl from 'azure-pipelines-task-lib/task';
-import globby from 'globby';
-import { readFileSync, writeFileSync, statSync } from 'fs';
-import { resolve, basename, dirname } from 'path';
-import cheerio from 'cheerio';
-import dashify from 'dashify';
+const tl = require('azure-pipelines-task-lib/task');
+const globby = require('globby');
+const { readFileSync, writeFileSync, statSync } = require('fs');
+const { resolve, basename, dirname } = require('path');
+const cheerio = require('cheerio');
+const dashify = require('dashify');
 
-type Props = {
-    name: string;
-    type: string;
-    path: string;
-}
-
-function addTaskAttachment(attachmentProps: Props) {
+function addTaskAttachment(attachmentProps) {
     tl.addAttachment(attachmentProps.type, attachmentProps.name, attachmentProps.path);
 }
 
 function run() {
     try {
-        const reportInputPath = tl.getPathInput('reportDir', true, false)!;
+        const reportInputPath = tl.getPathInput('reportDir', true, false);
         const isDir = statSync(reportInputPath).isDirectory();
-        let files: string[] = [];
-        let summaryPath: string;
+        let files = [];
+        let summaryPath;
 
         if (isDir) {
             files = globby.sync([`${reportInputPath}/**/*.{html,htm}`]); // Find all HTML files within the directory
@@ -30,7 +24,7 @@ function run() {
             summaryPath = resolve(dirname(reportInputPath), 'summary.json'); // Place summary in the directory containing the file
         }
 
-        const fileProperties: Props[] = [];
+        const fileProperties = [];
         const summaryProperties = {
             name: generateSummaryName(),
             type: 'report-html-summary',
@@ -61,12 +55,12 @@ function run() {
     }
 }
 
-function generateAttachmentName(fileName: string, isDirectory: boolean) {
-    const jobName = dashify(tl.getVariable('Agent.JobName')!);
-    const stageName = dashify(tl.getVariable('System.StageDisplayName')!);
+function generateAttachmentName(fileName, isDirectory) {
+    const jobName = dashify(tl.getVariable('Agent.JobName'));
+    const stageName = dashify(tl.getVariable('System.StageDisplayName'));
     const stageAttempt = tl.getVariable('System.StageAttempt');
     const useFilenamesAsTabHeaders = tl.getBoolInput('useFilenameTabs', true);
-    let tabName: string;
+    let tabName;
     if (isDirectory && useFilenamesAsTabHeaders) {
         tabName = basename(fileName)
     } else {
@@ -77,8 +71,8 @@ function generateAttachmentName(fileName: string, isDirectory: boolean) {
 }
 
 function generateSummaryName() {
-    const jobName = dashify(tl.getVariable('Agent.JobName')!);
-    const stageName = dashify(tl.getVariable('System.StageDisplayName')!);
+    const jobName = dashify(tl.getVariable('Agent.JobName'));
+    const stageName = dashify(tl.getVariable('System.StageDisplayName'));
     const stageAttempt = tl.getVariable('System.StageAttempt');
     const tabName = tl.getInput('tabName', false) || 'Html-Report';
     return `${tabName}~${jobName}~${stageName}~${stageAttempt}`;
