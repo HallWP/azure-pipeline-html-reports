@@ -22,6 +22,12 @@ steps:
       tabName: MyReport
 ```
 
+## Limitations
+
+Due to the way this extension works, we recommend that any HTML files published operate as entirely self-contained, single page reports. External links or style sheets that are embedded in HTML files may not function within the Azure DevOps UI due to CORS restrictions.
+
+It is also not possible to use relative links in HTML reports that are published via the extension since these will not resolve to the build artifacts in Azure DevOps. Anchor links should work as expected.
+
 ## Changelog
 
 ### v1.2.1

@@ -1,12 +1,12 @@
 {
   "name": "azure-pipelines-html-report",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "private": true,
   "author": "Jakub Rumpca, BlakYaks",
   "dependencies": {
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
-    "azure-devops-extension-api": "^4.245.1",
+    "azure-devops-extension-api": "^4.246.0",
     "azure-devops-extension-sdk": "^4.0.2",
     "azure-devops-ui": "^2.246.0",
     "dashify": "^2.0.0",
@@ -22,7 +22,7 @@
     "npm": ">=9"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.10.5",
     "@types/node-fetch": "^2.5.5",
     "@types/react": "^16.8.1",
     "@types/react-dom": "16.8.1",
@@ -33,20 +33,21 @@
     "jsdom": "^25.0.1",
     "rimraf": "^6.0.1",
     "sass": "^1.80.6",
-    "sass-loader": "^16.0.3",
+    "sass-loader": "^16.0.4",
     "style-loader": "^4.0.0",
     "tfx-cli": "^0.17.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.6.3",
-    "webpack": "^5.96.1",
+    "typescript": "^5.7.2",
+    "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "webpack-dev-server": "^5.2.0"
   },
   "scripts": {
     "clean": "rimraf ./dist",
     "build:cidev": "npm run clean && webpack --mode development",
     "build": "npm run clean && webpack --mode development",
     "postbuild": "npm run extension:package",
+    "postinstall": "cd PublishHtmlReport && npm install",
     "test": "echo No test available",
     "prune": "npm prune --production --ignore-scripts",
     "start:dev": "webpack-dev-server --mode development",
@@ -70,8 +71,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "workspaces": [
-    "PublishHtmlReport"
-  ]
+  }
 }
