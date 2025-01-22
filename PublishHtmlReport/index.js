@@ -17,7 +17,7 @@ function run() {
         let summaryPath;
 
         if (isDir) {
-            files = globby.sync([`${reportInputPath}/**/*.{html,htm}`]); // Find all HTML files within the directory
+            files = globby.sync([`${reportInputPath}/**/*.{html,htm,HTML,HTM}`]); // Find all HTML files within the directory
             summaryPath = resolve(reportInputPath, 'summary.json'); // Place summary in the directory
         } else {
             files = [reportInputPath]; // Single file case
