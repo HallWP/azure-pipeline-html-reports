@@ -22,13 +22,32 @@ steps:
       tabName: MyReport
 ```
 
-## Limitations
+## Limitations and known issues
 
-Due to the way this extension works, we recommend that any HTML files published operate as entirely self-contained, single page reports. External links or style sheets that are embedded in HTML files may not function within the Azure DevOps UI due to CORS restrictions.
+### HTML file compatibility
 
-It is also not possible to use relative links in HTML reports that are published via the extension since these will not resolve to the build artifacts in Azure DevOps. Anchor links should work as expected.
+Due to the way this extension works, we recommend that any HTML files published operate as entirely self-contained, single page reports. External links or style sheets that are embedded in HTML files may not function within the Azure DevOps UI due to CORS restrictions. It is also not possible to use relative links in HTML reports that are published via the extension since these will not resolve to the build artifacts in Azure DevOps. Anchor links should work as expected.
+
+### Large HTML reports
+
+Very large reports (e.g. greater than 50MB) may cause the task to exhaust the default Node memory allocation (as per this reported [issue](https://github.com/blakyaks/azure-pipeline-html-reports/issues/13)), leading to the task failing and not uploading the report as an attachment. In order to work around this issue it may be necessary to add an additional step in your pipelines before the publish task is executed:
+
+```yaml
+- powershell: |
+    # Set the NODE_OPTIONS environment variable
+    echo "##vso[task.setvariable variable=NODE_OPTIONS]--max-old-space-size=8192"
+  displayName: 'Set NODE_OPTIONS Environment Variable'
+```
+
+Note that large reports will also take an extended time to load in the UI and should be avoided where possible by breaking down the reports into smaller units.
 
 ## Changelog
+
+### v1.3.0
+
+- Addresses multiple CSS issues including [this](https://github.com/blakyaks/azure-pipeline-html-reports/issues/15) reported issue
+- Added functionality as per this [feature request](https://github.com/blakyaks/azure-pipeline-html-reports/issues/14) so that the tabs are not shown in the UI when only one report is provided
+- Updates task so that upper cased HTML/HTM files will also be imported if present
 
 ### v1.2.1
 
