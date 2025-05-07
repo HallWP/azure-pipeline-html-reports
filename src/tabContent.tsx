@@ -6,6 +6,7 @@ import { getClient } from "azure-devops-extension-api";
 import { Build, BuildRestClient, Attachment } from "azure-devops-extension-api/Build";
 import { Observer } from "azure-devops-ui/Observer";
 import { Tab, TabBar, TabSize } from "azure-devops-ui/Tabs";
+import DOMPurify from 'dompurify';
 
 const ATTACHMENT_TYPE = "report-html";
 
@@ -166,9 +167,12 @@ render() {
                                     id={attachment.name}
                                     key={attachment.name}
                                     url={attachment._links.self.href}
-                                    badgeCount={badgeCount}
-                                />
-                            );
+                                    (props: { selectedTabId: string }) => {
+                                        // Sanitize HTML content before rendering to prevent XSS attacks
+                                        const contentToRender = tabContents.get(props.selectedTabId) || tabInitialContent;
+                                        const sanitizedContent = DOMPurify.sanitize(contentToRender);
+                                        return <span dangerouslySetInnerHTML={{ __html: sanitizedContent }} />;
+                                    }
                         })}
                     </TabBar>
                     <Observer selectedTabId={selectedTabId} tabContents={tabContents}>
