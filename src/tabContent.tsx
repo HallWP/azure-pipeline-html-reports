@@ -129,7 +129,7 @@ export default class TaskAttachmentPanel extends React.Component<TaskAttachmentP
     }[tag] || tag));
   }
 
-  render() {
+render() {
     const { selectedTabId, tabContents, tabInitialContent } = this.state;
     const attachments = this.props.attachmentClient.getAttachments();
 
@@ -137,7 +137,12 @@ export default class TaskAttachmentPanel extends React.Component<TaskAttachmentP
         return null;
     }
 
-    const containerClass = "wide"
+    const containerClass = "wide";
+    
+    // Function to sanitize HTML content before rendering
+    const sanitizeHtml = (html: string): string => {
+        return DOMPurify.sanitize(html);
+    };
 
     return (
         <div className={containerClass}>
@@ -168,15 +173,16 @@ export default class TaskAttachmentPanel extends React.Component<TaskAttachmentP
                     </TabBar>
                     <Observer selectedTabId={selectedTabId} tabContents={tabContents}>
                         {(props: { selectedTabId: string }) => {
-                            return <span dangerouslySetInnerHTML={{ __html: tabContents.get(props.selectedTabId) || tabInitialContent }} />;
+                            const content = tabContents.get(props.selectedTabId) || tabInitialContent;
+                            return <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }} />;
                         }}
                     </Observer>
                 </>
             ) : (
-                <span dangerouslySetInnerHTML={{ __html: tabContents.get(attachments[0].name) || tabInitialContent }} />
+                <span dangerouslySetInnerHTML={{ __html: sanitizeHtml(tabContents.get(attachments[0].name) || tabInitialContent) }} />
             )}
         </div>
     );
-  }
+}
 
 }
